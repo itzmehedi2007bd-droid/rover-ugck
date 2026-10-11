@@ -1,0 +1,82 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  isSuperAdmin Boolean  @default(false)
+  canManageNotices  Boolean @default(false)
+  canManageEvents   Boolean @default(false)
+  canManageGallery  Boolean @default(false)
+  canManageResources Boolean @default(false)
+  canManageMembers Boolean @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Notice {
+  id          String   @id @default(cuid())
+  title       String
+  content     String
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  location    String?
+  startDate   DateTime
+  endDate     DateTime?
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Resource {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  category     String   @default("অন্যান্য")
+  fileName     String
+  filePath     String
+  mimeType     String
+  fileSize     Int
+  published    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+}
+
+model GalleryImage {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  fileName    String
+  filePath    String
+  createdAt   DateTime @default(now())
+}
+
+model Member {
+  id           String   @id @default(cuid())
+  fullName     String
+  designation  String
+  batch        String?
+  memberNumber String?  @unique
+  imageUrl     String?
+  published    Boolean  @default(false)
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([published, displayOrder])
+}
